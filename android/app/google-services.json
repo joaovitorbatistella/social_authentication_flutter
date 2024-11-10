@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "511991179361",
+    "project_id": "social-authentication-flutter",
+    "storage_bucket": "social-authentication-flutter.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:511991179361:android:5640bf93e069cbd900a220",
+        "android_client_info": {
+          "package_name": "com.example.social_authentication_flutter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "511991179361-3hpd66igq7p9pa37l8lulqckga0mdbjn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXJ28YIRkQSGZ4DHAxY58Tt3us6tUGxuo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "511991179361-3hpd66igq7p9pa37l8lulqckga0mdbjn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
