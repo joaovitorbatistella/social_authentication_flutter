@@ -37,34 +37,6 @@ class AuthenticationService {
     }
   }
 
-  // Método para login silencioso (usado na web)
-  Future<User?> loginSilently() async {
-    try {
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signInSilently();
-
-      if (googleUser == null) {
-        // Usuário não autenticado
-        return null;
-      }
-
-      final GoogleSignInAuthentication googleAuth =
-      await googleUser.authentication;
-
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      final UserCredential userCredential =
-      await _auth.signInWithCredential(credential);
-
-      return userCredential.user;
-    } catch (e) {
-      print("Erro ao fazer login silencioso: $e");
-      return null;
-    }
-  }
-
   // Método de logout
   Future<void> logout() async {
     await _auth.signOut();

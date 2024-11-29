@@ -26,6 +26,7 @@ class HomePage extends StatelessWidget {
             Text("Bem-vindo, ${user?.displayName ?? 'Usuário'}!"),
             SizedBox(height: 16),
             Text("Email: ${user?.email ?? 'Email não encontrado'}"),
+            if (user?.photoURL != null) Image.network(user!.photoURL!),
           ],
         ),
       ),
