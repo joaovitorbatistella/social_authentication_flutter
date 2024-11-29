@@ -1,65 +1,73 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class AuthenticationService {
-
-  bool loading = false;
-
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn(
-      clientId: "511991179361-3hpd66igq7p9pa37l8lulqckga0mdbjn.apps.googleusercontent.com",
+    clientId: "511991179361-3hpd66igq7p9pa37l8lulqckga0mdbjn.apps.googleusercontent.com",
   );
 
-  String ?userName = "";
-  String ?userEmail = "";
-  String ?userUrl = "";
-
-  Future<bool> _googleLogin() async {
+  // Método de login com o Google
+  Future<User?> loginWithGoogle() async {
     try {
-      GoogleSignInAccount ?account;
-      loading = true;
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
 
-      account = await _googleSignIn.signIn();
-
-      if(account == null) {
-        loading = false;
-        return false;
+      if (googleUser == null) {
+        // O usuário cancelou o login
+        return null;
       }
 
-      userName = account.displayName;
-      userEmail = account.email;
-      userUrl = account.photoUrl;
+      // Obtém as credenciais do Google
+      final GoogleSignInAuthentication googleAuth =
+      await googleUser.authentication;
 
-      print({
-        userUrl,
-        userEmail,
-        userName
-      });
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
 
-      loading = false;
-      return true;
+      // Faz a autenticação com o Firebase
+      final UserCredential userCredential =
+      await _auth.signInWithCredential(credential);
+
+      return userCredential.user;
     } catch (e) {
-      print(e.toString());
-      return false;
-    } finally {
-      loading = false;
+      print("Erro ao fazer login com Google: $e");
+      return null;
     }
   }
 
-  void loginWithGoogle() async {
+  // Método para login silencioso (usado na web)
+  Future<User?> loginSilently() async {
     try {
-      loading = true;
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signInSilently();
 
-      final result = await _googleLogin();
+      if (googleUser == null) {
+        // Usuário não autenticado
+        return null;
+      }
 
-      loading = false;
+      final GoogleSignInAuthentication googleAuth =
+      await googleUser.authentication;
 
-      result ? print("Logged in") : print("Error");
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final UserCredential userCredential =
+      await _auth.signInWithCredential(credential);
+
+      return userCredential.user;
     } catch (e) {
-      print(e.toString());
-    } finally {
-      loading = false;
+      print("Erro ao fazer login silencioso: $e");
+      return null;
     }
   }
 
+  // Método de logout
+  Future<void> logout() async {
+    await _auth.signOut();
+    await _googleSignIn.signOut();
+  }
 }
